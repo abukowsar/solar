@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { denyUnlessAdmin } from "@/lib/auth";
 import { solsetConfigured } from "@/lib/solset-api";
-import { readDb } from "@/lib/store";
+import { readDb, storageKind } from "@/lib/store";
 
 /** Everything the admin panel needs, unmasked. */
 export async function GET() {
@@ -22,7 +22,7 @@ export async function GET() {
         solsetWebhook: !!process.env.SOLSET_WEBHOOK_URL,
         adminToken: !!process.env.ADMIN_TOKEN,
         adminSecret: !!process.env.ADMIN_SECRET,
-        dataFile: process.env.DATA_FILE || "data/db.json",
+        dataFile: storageKind(),
       },
     },
     { headers: { "Cache-Control": "no-store" } },

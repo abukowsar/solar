@@ -92,7 +92,7 @@ export default function AdminSettings() {
 
       <section className="card">
         <h3>ইন্টিগ্রেশন অবস্থা</h3>
-        <p className="note" style={{ marginTop: 0 }}>এগুলো সার্ভারের <code>.env.local</code> থেকে আসে; পরিবর্তনের পর সার্ভার আবার চালু করুন। ডেটা ফাইল: <code>{i.dataFile}</code></p>
+        <p className="note" style={{ marginTop: 0 }}>এগুলো সার্ভারের <code>.env.local</code> থেকে আসে; পরিবর্তনের পর সার্ভার আবার চালু করুন। ডেটা স্টোর: <code>{i.dataFile}</code></p>
         <ul className="integrations">
           {integrations.map((x) => (
             <li key={x.label}>

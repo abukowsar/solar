@@ -32,7 +32,7 @@ export async function POST(req: Request) {
   const saved = await mutate((db) => {
     const d: SavedDesign = {
       id: uid(),
-      ref: nextRef("DS", db.designs.length),
+      ref: nextRef(db, "DS"),
       created: new Date().toISOString(),
       contact,
       input,

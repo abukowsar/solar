@@ -43,7 +43,7 @@ export async function POST(req: Request) {
   const created = await mutate((db) => {
     const p: Provider = {
       id: uid(),
-      ref: nextRef("SP", db.providers.length),
+      ref: nextRef(db, "SP"),
       company, contact, phone, email, home, expKw, docs, solset,
       kind: oneOf(b.kind, PROVIDER_KINDS.map((k) => k.value), "new"),
       types: pick(b.types, CATEGORIES),

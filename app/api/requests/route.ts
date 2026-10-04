@@ -42,7 +42,7 @@ export async function POST(req: Request) {
   const created = await mutate((db) => {
     const r: SetupRequest = {
       id: uid(),
-      ref: nextRef("SR", db.requests.length),
+      ref: nextRef(db, "SR"),
       name, phone, district, upazila, address, utility,
       category: oneOf(b.category, CATEGORIES, CATEGORIES[0]),
       roof,
