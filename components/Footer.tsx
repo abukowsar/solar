@@ -94,7 +94,7 @@ export default function Footer() {
         </div>
 
         <div className="wrap bottom">
-          <span>© {now.getFullYear().toString().replace(/\d/g, (d) => "০১২৩৪৫৬৭৮৯"[+d])} ছাদে সোলার · সংযোগ ডেস্ক · পরিকল্পনা ও বাস্তবায়ন: প্রকৌশলী আবু কাওসার</span>
+          <span>© {now.getFullYear().toString().replace(/\d/g, (d) => "০১২৩৪৫৬৭৮৯"[+d])} ছাদে সোলার · সংযোগ ডেস্ক · পরিকল্পনা ও বাস্তবায়ন: বিউবো, চট্টগ্রাম</span>
           <span className="bottom-right">
             ডিজাইন ও লিড: Solset AI
             <a className="to-top" href="#top" aria-label="উপরে যান"><ArrowUp size={16} /></a>
