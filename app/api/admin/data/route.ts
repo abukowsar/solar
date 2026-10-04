@@ -1,13 +1,22 @@
 import { NextResponse } from "next/server";
 import { denyUnlessAdmin } from "@/lib/auth";
 import { solsetConfigured } from "@/lib/solset-api";
-import { readDb, storageKind } from "@/lib/store";
+import { STORE_OUTAGE_MESSAGE, isStoreOutage, readDb, storageKind } from "@/lib/store";
 
 /** Everything the admin panel needs, unmasked. */
 export async function GET() {
   const denied = await denyUnlessAdmin();
   if (denied) return denied;
-  const db = await readDb();
+  let db;
+  try {
+    db = await readDb();
+  } catch (e) {
+    console.error("[admin/data]", e);
+    return NextResponse.json(
+      { error: isStoreOutage(e) ? `${STORE_OUTAGE_MESSAGE} (${storageKind()})` : "ডেটা লোড করা যায়নি — সার্ভার লগ দেখুন।" },
+      { status: 503 },
+    );
+  }
   const byNewest = <T extends { created: string }>(xs: T[]) => xs.slice().sort((a, b) => b.created.localeCompare(a.created));
   return NextResponse.json(
     {

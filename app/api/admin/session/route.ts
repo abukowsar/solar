@@ -21,7 +21,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "পাসওয়ার্ড সঠিক নয়" }, { status: 401 });
   }
   clearLoginFailures(ip);
-  await mutate((db) => audit(db, "লগইন", ip));
+  // Best-effort: the audit entry must never block sign-in (e.g. while the database is unreachable).
+  await mutate((db) => audit(db, "লগইন", ip)).catch((e) => console.error("[admin/session] audit failed:", (e as Error).message));
 
   const { value, maxAge } = createSessionValue();
   const res = NextResponse.json({ ok: true });

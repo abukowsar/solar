@@ -44,6 +44,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const router = useRouter();
   const [data, setData] = useState<AdminData | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState("");
   const [note, setNote] = useState<{ msg: string; ok: boolean } | null>(null);
 
   const toast = useCallback((msg: string, ok = true) => {
@@ -55,9 +56,13 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     setLoading(true);
     try {
       setData(await api<AdminData>("/api/admin/data"));
+      setLoadError("");
     } catch (e) {
       if ((e as Error).message.includes("লগইন")) router.replace("/admin/login");
-      else toast((e as Error).message, false);
+      else {
+        setLoadError((e as Error).message);
+        toast((e as Error).message, false);
+      }
     } finally {
       setLoading(false);
     }
@@ -116,7 +121,16 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
               <RefreshCw size={15} className={loading ? "spin" : ""} /> রিফ্রেশ
             </button>
           </div>
-          <div className="admin-content">{data ? children : <div className="empty">লোড হচ্ছে…</div>}</div>
+          <div className="admin-content">
+            {data ? children : loadError ? (
+              <div className="empty">
+                <p style={{ margin: "0 0 12px", color: "var(--red-text)" }}>{loadError}</p>
+                <button className="btn primary sm" type="button" onClick={reload} disabled={loading}>
+                  <RefreshCw size={15} className={loading ? "spin" : ""} /> আবার চেষ্টা করুন
+                </button>
+              </div>
+            ) : <div className="empty">লোড হচ্ছে…</div>}
+          </div>
         </div>
       </div>
       {note && <div className={`admin-toast ${note.ok ? "ok" : "err"}`} role="status">{note.msg}</div>}

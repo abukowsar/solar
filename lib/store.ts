@@ -208,8 +208,22 @@ export function audit(db: DB, action: string, target: string) {
   if (db.audit.length > AUDIT_LIMIT) db.audit.length = AUDIT_LIMIT;
 }
 
-export async function getSettings() {
-  return (await readDb()).settings;
+/** Site settings for the public layout. Falls back to defaults if the store is unreachable, so the site stays up. */
+export async function getSettings(): Promise<Settings> {
+  try {
+    return (await readDb()).settings;
+  } catch (e) {
+    console.error("[store] settings unavailable, using defaults:", (e as Error).message);
+    return structuredClone(DEFAULT_SETTINGS);
+  }
 }
+
+/** True when an error means the database couldn't be reached (vs. a bug). */
+export function isStoreOutage(e: unknown) {
+  const name = (e as Error)?.name ?? "";
+  return /MongoServerSelectionError|MongoNetworkError|MongoTimeoutError|MongoNotConnectedError/.test(name);
+}
+
+export const STORE_OUTAGE_MESSAGE = "ডেটাবেসে এখন সংযোগ করা যাচ্ছে না — কিছুক্ষণ পরে আবার চেষ্টা করুন।";
 
 export const storageKind = () => (useMongo() ? `MongoDB (${process.env.MONGODB_DB || "rooftop_solar"})` : FILE);

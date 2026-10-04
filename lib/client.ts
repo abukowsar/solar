@@ -9,7 +9,14 @@ export async function api<T>(url: string, init?: RequestInit): Promise<T> {
     cache: "no-store",
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  if (!res.ok) {
+    throw new Error(
+      data.error ||
+        (res.status >= 500
+          ? `সার্ভারে সমস্যা হয়েছে (HTTP ${res.status}) — কিছুক্ষণ পরে আবার চেষ্টা করুন।`
+          : `অনুরোধ সম্পন্ন হয়নি (HTTP ${res.status})`),
+    );
+  }
   return data as T;
 }
 
