@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ছাদে সোলার · সংযোগ ডেস্ক</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Tiro+Bangla&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#0A5C43; --green-2:#0d7354; --gold:#B98A2F; --gold-soft:#f1e3c2;
+  --cream:#F7F1E3; --paper:#fffdf7; --ink:#1d2a24; --muted:#5d6b63; --line:#ddd2b8;
+  --red:#b3261e; --ok:#1f7a4d;
+  --sans:"Hind Siliguri","Noto Sans Bengali",system-ui,sans-serif;
+  --serif:"Tiro Bangla","Noto Serif Bengali",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --cream:#14201b; --paper:#1b2a24; --ink:#eef0e8; --muted:#a8b5ad; --line:#33473e; --gold-soft:#3a3120; --green-2:#3fa37f;
+}}
+:root[data-theme="dark"]{--cream:#14201b; --paper:#1b2a24; --ink:#eef0e8; --muted:#a8b5ad; --line:#33473e; --gold-soft:#3a3120; --green-2:#3fa37f;}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6}
+a{color:var(--green-2)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+header.band{background:var(--green);color:#fff}
+.band-in{max-width:1080px;margin:0 auto;padding:18px 20px 0;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.seal{width:44px;height:44px;border-radius:50%;background:#fff;display:grid;place-items:center;flex:none;border:3px solid var(--gold)}
+.seal span{width:22px;height:22px;border-radius:50%;background:#d6342c}
+.band h1{font-family:var(--serif);font-weight:400;font-size:clamp(1.4rem,3.4vw,2rem);margin:0;line-height:1.2}
+.band p{margin:0;opacity:.85;font-size:.92rem}
+nav.tabs{max-width:1080px;margin:14px auto 0;padding:0 12px;display:flex;gap:2px;overflow-x:auto}
+nav.tabs button{background:transparent;border:0;color:#e3efe9;padding:10px 14px;border-radius:10px 10px 0 0;cursor:pointer;white-space:nowrap;font-weight:500}
+nav.tabs button[aria-selected="true"]{background:var(--cream);color:var(--green);font-weight:700}
+:root[data-theme="dark"] nav.tabs button[aria-selected="true"]{color:var(--ink)}
+
+main{max-width:1080px;margin:0 auto;padding:24px 20px 60px}
+section[hidden]{display:none}
+h2{font-family:var(--serif);font-weight:400;font-size:1.6rem;margin:0 0 6px;color:var(--green)}
+:root[data-theme="dark"] h2{color:var(--ink)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) h2{color:var(--ink)}}
+h3{font-size:1.08rem;margin:0 0 8px}
+.lede{color:var(--muted);max-width:68ch;margin:0 0 22px}
+
+/* The memorable element: two QR dockets */
+.dockets{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;margin-bottom:28px}
+.docket{background:var(--paper);border:1.5px solid var(--line);border-radius:4px;position:relative;padding:22px 22px 18px 92px;min-height:220px}
+.docket::before{content:"";position:absolute;left:0;top:0;bottom:0;width:72px;background:
+  repeating-linear-gradient(0deg,var(--green) 0 6px,transparent 6px 9px),
+  repeating-linear-gradient(90deg,var(--green) 0 7px,transparent 7px 11px);
+  background-blend-mode:multiply;opacity:.9;
+border-right:2px dashed var(--line)}
+.docket.b::before{background:repeating-linear-gradient(0deg,var(--gold) 0 6px,transparent 6px 9px),repeating-linear-gradient(90deg,var(--gold) 0 7px,transparent 7px 11px)}
+.docket .ref{font-family:var(--mono);font-size:.74rem;color:var(--muted);letter-spacing:.02em}
+.docket h3{font-family:var(--serif);font-weight:400;font-size:1.35rem;margin:4px 0 8px}
+.docket ul{margin:0 0 14px;padding-left:1.1em;font-size:.93rem}
+.docket .src{font-size:.8rem;color:var(--muted);word-break:break-all}
+.stamp{position:absolute;right:16px;top:14px;border:2px solid var(--red);color:var(--red);font-size:.75rem;padding:2px 8px;border-radius:3px;transform:rotate(4deg);font-weight:700}
+
+.btn{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:8px;padding:10px 16px;cursor:pointer;font-weight:600;text-decoration:none}
+.btn.primary{background:var(--green);color:#fff}
+.btn.gold{background:var(--gold);color:#1b1404}
+.btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
+.btn.sm{padding:6px 10px;font-size:.86rem;font-weight:500}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;border-top:2px solid var(--green);border-bottom:1px solid var(--line)}
+.facts div{padding:14px 16px;border-right:1px solid var(--line)}
+.facts div:last-child{border-right:0}
+.facts b{display:block;font-family:var(--serif);font-weight:400;font-size:1.3rem;color:var(--green-2)}
+.facts small{color:var(--muted)}
+
+form.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px}
+@media (max-width:640px){form.grid{grid-template-columns:1fr}}
+.full{grid-column:1/-1}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:.92rem;font-weight:500}
+label.f em{font-style:normal;color:var(--muted);font-weight:400;font-size:.8rem}
+input[type=text],input[type=tel],input[type=email],input[type=number],input[type=url],select,textarea{
+  background:var(--paper);border:1.5px solid var(--line);border-radius:6px;padding:9px 11px;width:100%}
+textarea{min-height:70px;resize:vertical}
+fieldset{border:1.5px solid var(--line);border-radius:6px;padding:10px 14px;margin:0}
+legend{font-weight:600;font-size:.92rem;padding:0 6px}
+.checks{display:flex;flex-wrap:wrap;gap:6px 16px}
+.checks label{display:flex;gap:6px;align-items:center;font-size:.92rem}
+.district-picker{max-height:180px;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:2px 10px}
+
+.split{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:26px;align-items:start}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
+.panel{background:var(--paper);border:1.5px solid var(--line);border-radius:6px;padding:18px}
+.calc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);border-top:5px solid var(--gold)}
+.calc dl{margin:0;display:grid;grid-template-columns:1fr auto;gap:8px 12px}
+.calc dt{color:var(--muted);font-size:.9rem}
+.calc dd{margin:0;font-family:var(--serif);font-size:1.15rem;text-align:right}
+.calc .big{grid-column:1/-1;border-top:1px dashed var(--line);padding-top:10px;margin-top:4px}
+.calc .big dd{font-size:1.8rem;color:var(--green-2);text-align:left}
+.note{font-size:.8rem;color:var(--muted);margin-top:10px}
+.score{font-family:var(--mono);font-size:.85rem}
+
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.toolbar select,.toolbar input{width:auto;min-width:160px}
+.req{background:var(--paper);border:1.5px solid var(--line);border-left:5px solid var(--green);border-radius:4px;padding:14px 16px;margin-bottom:14px}
+.req header{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.req .ref{font-family:var(--mono);font-size:.75rem;color:var(--muted)}
+.req .meta{color:var(--muted);font-size:.88rem}
+.pipe{display:flex;gap:0;margin:10px 0;overflow-x:auto}
+.pipe button{border:1.5px solid var(--line);background:transparent;padding:4px 10px;font-size:.8rem;cursor:pointer;white-space:nowrap;margin-left:-1.5px}
+.pipe button:first-child{border-radius:6px 0 0 6px;margin-left:0}
+.pipe button:last-child{border-radius:0 6px 6px 0}
+.pipe button.done{background:var(--green);color:#fff;border-color:var(--green)}
+.matches{font-size:.88rem;margin-top:6px}
+.chip{display:inline-block;background:var(--gold-soft);border-radius:999px;padding:1px 10px;margin:2px 4px 2px 0;font-size:.82rem}
+.chip.int{background:var(--green);color:#fff}
+.empty{border:2px dashed var(--line);border-radius:6px;padding:28px;text-align:center;color:var(--muted)}
+.wrap-x{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;white-space:nowrap}
+th{font-weight:600;color:var(--muted)}
+.steps-int{counter-reset:s;list-style:none;padding:0;margin:0}
+.steps-int li{counter-increment:s;padding:10px 0 10px 44px;position:relative;border-bottom:1px solid var(--line)}
+.steps-int li::before{content:counter(s);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:700}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--green);color:#fff;padding:10px 18px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.25);display:none;z-index:9;max-width:90vw}
+.status-line{font-size:.8rem;color:var(--muted);margin-top:4px}
+footer{max-width:1080px;margin:0 auto;padding:0 20px 30px;color:var(--muted);font-size:.8rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="band-in">
+    <div class="seal" aria-hidden="true"><span></span></div>
+    <div>
+      <h1>ছাদে সোলার · সংযোগ ডেস্ক</h1>
+      <p>জাতীয় রুফটপ সোলার কর্মসূচি — ছাদ মালিক ও তালিকাভুক্ত সার্ভিস প্রোভাইডারকে এক জায়গায় যুক্ত করে</p>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="বিভাগ">
+    <button role="tab" data-tab="home" aria-selected="true">সূচনা</button>
+    <button role="tab" data-tab="owner" aria-selected="false">ছাদ মালিকের আবেদন</button>
+    <button role="tab" data-tab="provider" aria-selected="false">প্রোভাইডার নিবন্ধন</button>
+    <button role="tab" data-tab="board" aria-selected="false">মিলান বোর্ড</button>
+    <button role="tab" data-tab="solset" aria-selected="false">Solset সংযোগ</button>
+  </nav>
+</header>
+
+<main>
+<!-- HOME -->
+<section id="tab-home">
+  <h2>দুটি পোস্টার, দুটি পথ</h2>
+  <p class="lede">মাঠে বিতরণ করা দুটি সরকারি পোস্টারের QR কোড থেকে আসা মানুষ এখানে নিজের পথ বেছে নেবেন। ছাদ মালিক সেটআপের অনুরোধ জমা দেন, সার্ভিস প্রোভাইডার নিজের জেলায় নিবন্ধন করেন, আর মিলান বোর্ড দুই পক্ষকে যুক্ত করে Solset CRM-এ লিড পাঠায়।</p>
+
+  <div class="dockets">
+    <article class="docket b">
+      <div class="ref">QR-B · ছাদ মালিক পোস্টার · “এবার ছাদ থেকেই আয়ের সুযোগ!”</div>
+      <h3>ছাদে সোলার বসাতে চাই</h3>
+      <ul>
+        <li>অতিরিক্ত বিদ্যুৎ জাতীয় গ্রিডে দিয়ে প্রতি ইউনিটে ১০.৫০ টাকা</li>
+        <li>প্রতি ৩ মাসে সরাসরি ব্যাংক অ্যাকাউন্টে পেমেন্ট</li>
+        <li>২৮ ফেব্রুয়ারি ২০২৭-এর মধ্যে চালু করলে ২০৩০ পর্যন্ত এই হার</li>
+      </ul>
+      <button class="btn gold" data-go="owner">সেটআপের অনুরোধ করুন</button>
+      <p class="src">QR উৎস দলিল: <a href="https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-powerdivision/2026/8/fe3b2074-53e1-4111-98cf-8a2b3a1ee85a.pdf" target="_blank" rel="noopener">বিদ্যুৎ বিভাগ (PDF)</a></p>
+    </article>
+    <article class="docket">
+      <span class="stamp">শেষ সময় ৩১/১২/২০২৮</span>
+      <div class="ref">QR-A · প্রোভাইডার পোস্টার · “সোলার ব্যবসা, এবার আপনার জেলায়!”</div>
+      <h3>সার্ভিস প্রোভাইডার হতে চাই</h3>
+      <ul>
+        <li>নিজের জেলায় আবেদনে সর্বোচ্চ ৪০ নম্বর অতিরিক্ত</li>
+        <li>নতুন উদ্যোক্তা হিসেবে ১০ নম্বর; অভিজ্ঞদের সঙ্গে যৌথভাবে কাজের সুযোগ</li>
+        <li>আবেদন ফি ৫০০ টাকা, জেলার বিদ্যুৎ বিতরণ অফিসে</li>
+      </ul>
+      <button class="btn primary" data-go="provider">প্রোভাইডার হিসেবে নিবন্ধন</button>
+      <p class="src">QR উৎস দলিল: <a href="https://misc.bpdb.gov.bd/storage/tender/tender_27083_0.pdf" target="_blank" rel="noopener">বিউবো তালিকাভুক্তি বিজ্ঞপ্তি (PDF)</a></p>
+    </article>
+  </div>
+
+  <div class="facts" id="liveStats">
+    <div><b id="stReq">০</b><small>সেটআপ অনুরোধ</small></div>
+    <div><b id="stProv">০</b><small>নিবন্ধিত প্রোভাইডার</small></div>
+    <div><b id="stKw">০</b><small>প্রস্তাবিত ক্ষমতা (kWp)</small></div>
+    <div><b id="stDist">০</b><small>জেলা থেকে অনুরোধ</small></div>
+  </div>
+  <p class="status-line" id="storeStatus">ডেটা স্টোর সংযোগ হচ্ছে…</p>
+</section>
+
+<!-- OWNER -->
+<section id="tab-owner" hidden>
+  <h2>ছাদে সোলার সেটআপের অনুরোধ</h2>
+  <p class="lede">ছাদের তথ্য দিন, ডান পাশে আনুমানিক ক্ষমতা ও আয় দেখুন। জমা দিলে আপনার জেলার তালিকাভুক্ত প্রোভাইডাররা অনুরোধটি দেখতে পাবেন।</p>
+  <div class="split">
+    <form class="grid panel" id="ownerForm" novalidate>
+      <label class="f">নাম<input type="text" name="name" required autocomplete="name"></label>
+      <label class="f">মোবাইল নম্বর<input type="tel" name="phone" required placeholder="01XXXXXXXXX" pattern="01[3-9][0-9]{8}" inputmode="numeric"></label>
+      <label class="f">জেলা<select name="district" required class="districtSel"></select></label>
+      <label class="f">উপজেলা / থানা<input type="text" name="upazila" required></label>
+      <label class="f full">ঠিকানা<input type="text" name="address" required autocomplete="street-address"></label>
+      <label class="f">বিদ্যুৎ বিতরণ সংস্থা
+        <select name="utility" required>
+          <option value="">বেছে নিন</option>
+          <option>BREB (পল্লী বিদ্যুৎ)</option><option>BPDB</option><option>DPDC</option>
+          <option>DESCO</option><option>WZPDC (ওজোপাডিকো)</option><option>NESCO</option>
+        </select></label>
+      <label class="f">ভবনের ধরন
+        <select name="building"><option>আবাসিক</option><option>বাণিজ্যিক</option><option>শিল্প / কারখানা</option><option>প্রাতিষ্ঠানিক (স্কুল/হাসপাতাল)</option></select></label>
+      <label class="f">ব্যবহারযোগ্য ছাদের আয়তন <em>বর্গফুট, ছায়ামুক্ত অংশ</em><input type="number" name="roof" min="50" step="10" required value="800"></label>
+      <label class="f">ছাদের ধরন<select name="roofType"><option>পাকা (RCC) সমতল</option><option>টিনের ঢালু ছাদ</option><option>সেমি-পাকা</option></select></label>
+      <label class="f">মাসিক বিদ্যুৎ ব্যবহার <em>ইউনিট (kWh), বিল থেকে</em><input type="number" name="units" min="0" value="250"></label>
+      <label class="f">অনুমোদিত লোড <em>kW, বিলে লেখা থাকে</em><input type="number" name="load" min="0" step="0.5" value="5"></label>
+      <fieldset class="full"><legend>কী চান</legend>
+        <div class="checks">
+          <label><input type="checkbox" name="goal" value="নিজস্ব ব্যবহার" checked> নিজের ব্যবহার</label>
+          <label><input type="checkbox" name="goal" value="গ্রিডে বিক্রি" checked> অতিরিক্ত বিদ্যুৎ গ্রিডে বিক্রি</label>
+          <label><input type="checkbox" name="goal" value="ব্যাটারি ব্যাকআপ"> ব্যাটারি ব্যাকআপ</label>
+          <label><input type="checkbox" name="goal" value="ছাদ ভাড়া"> ছাদ ভাড়া দিতে চাই</label>
+        </div></fieldset>
+      <label class="f">কখন চালু করতে চান<select name="when"><option>২৮ ফেব্রুয়ারি ২০২৭-এর আগে</option><option>২০২৭ সালের মধ্যে</option><option>এখনো ঠিক করিনি</option></select></label>
+      <label class="f">QR উৎস<select name="source"><option value="QR-B">QR-B (ছাদ মালিক পোস্টার)</option><option value="QR-A">QR-A (প্রোভাইডার পোস্টার)</option><option value="সরাসরি">সরাসরি / অন্যান্য</option></select></label>
+      <label class="f full">অবস্থান (ঐচ্ছিক)
+        <span style="display:flex;gap:8px"><input type="text" name="geo" placeholder="অক্ষাংশ, দ্রাঘিমাংশ" readonly><button type="button" class="btn ghost sm" id="geoBtn">বর্তমান অবস্থান নিন</button></span></label>
+      <label class="f full">অতিরিক্ত তথ্য<textarea name="notes" placeholder="যেমন: ছাদে পানির ট্যাংক আছে, পাশের ভবনের ছায়া পড়ে"></textarea></label>
+      <label class="full checks"><label><input type="checkbox" name="consent" required> আমার তথ্য তালিকাভুক্ত প্রোভাইডারদের সঙ্গে শেয়ার করতে সম্মত</label></label>
+      <div class="full"><button class="btn primary" type="submit">অনুরোধ জমা দিন</button> <span class="status-line" id="ownerMsg"></span></div>
+    </form>
+
+    <aside class="panel calc" aria-live="polite">
+      <h3>আনুমানিক হিসাব</h3>
+      <dl>
+        <dt>সম্ভাব্য সিস্টেম</dt><dd id="cKw">—</dd>
+        <dt>বার্ষিক উৎপাদন</dt><dd id="cGen">—</dd>
+        <dt>নিজের বার্ষিক ব্যবহার</dt><dd id="cUse">—</dd>
+        <dt>গ্রিডে উদ্বৃত্ত</dt><dd id="cExp">—</dd>
+        <div class="big"><dt>প্রতি ৩ মাসে আনুমানিক আয়</dt><dd id="cPay">—</dd></div>
+      </dl>
+      <p class="note" id="cWarn"></p>
+      <p class="note">ধরে নেওয়া হয়েছে: প্রতি kWp-এ ~১০০ বর্গফুট ছাদ, দৈনিক ~৪.২ ইউনিট/kWp উৎপাদন, উদ্বৃত্ত বিদ্যুৎ ১০.৫০ টাকা/ইউনিট। নিখুঁত ডিজাইন প্রোভাইডার সাইট সার্ভের পর Solset Design Studio-তে করবেন; বিদ্যুৎ বিভাগের রুফটপ সোলার ক্যালকুলেটরও দেখুন।</p>
+    </aside>
+  </div>
+</section>
+
+<!-- PROVIDER -->
+<section id="tab-provider" hidden>
+  <h2>রুফটপ সোলার সার্ভিস প্রোভাইডার নিবন্ধন</h2>
+  <p class="lede">এই নিবন্ধন আপনাকে মিলান বোর্ডে লিড দেখার সুযোগ দেয়। সরকারি তালিকাভুক্তির আবেদন আলাদাভাবে আপনার জেলার বিদ্যুৎ বিতরণ অফিসে জমা দিতে হবে।</p>
+  <div class="split">
+    <form class="grid panel" id="provForm" novalidate>
+      <label class="f full">প্রতিষ্ঠানের নাম<input type="text" name="company" required></label>
+      <label class="f">যোগাযোগকারী<input type="text" name="contact" required></label>
+      <label class="f">মোবাইল<input type="tel" name="phone" required pattern="01[3-9][0-9]{8}" inputmode="numeric"></label>
+      <label class="f">ইমেইল<input type="email" name="email"></label>
+      <label class="f">ব্যবসা নিবন্ধিত জেলা<select name="home" required class="districtSel"></select></label>
+      <label class="f">প্রতিষ্ঠানের ধরন
+        <select name="kind" required><option value="new">নতুন উদ্যোক্তা</option><option value="exp">অভিজ্ঞ প্রতিষ্ঠান</option><option value="jv">যৌথ উদ্যোগ (অভিজ্ঞের সঙ্গে)</option></select></label>
+      <label class="f">সম্পন্ন প্রকল্প (মোট kWp)<input type="number" name="expKw" min="0" value="0"></label>
+      <fieldset class="full"><legend>যোগ্যতার কাগজপত্র আছে কি</legend>
+        <div class="checks">
+          <label><input type="checkbox" name="doc" value="trade"> ট্রেড লাইসেন্স</label>
+          <label><input type="checkbox" name="doc" value="tin"> TIN</label>
+          <label><input type="checkbox" name="doc" value="solv"> ১০ লাখ টাকার ব্যাংক সলভেন্সি</label>
+          <label><input type="checkbox" name="doc" value="tax"> হালনাগাদ ট্যাক্স সার্টিফিকেট</label>
+          <label><input type="checkbox" name="doc" value="fee"> ৫০০ টাকা ফি দিয়ে আবেদন জমা</label>
+        </div></fieldset>
+      <fieldset class="full"><legend>প্রকল্পের ধরন</legend>
+        <div class="checks">
+          <label><input type="checkbox" name="types" value="নিজস্ব ব্যবহার" checked> নিজস্ব ব্যবহারের সোলার</label>
+          <label><input type="checkbox" name="types" value="গ্রিডে বিক্রি" checked> গ্রিডে সরবরাহ</label>
+          <label><input type="checkbox" name="types" value="ব্যাটারি ব্যাকআপ"> ব্যাটারি সিস্টেম</label>
+          <label><input type="checkbox" name="types" value="ছাদ ভাড়া"> ছাদ ভাড়া নিয়ে প্রকল্প</label>
+        </div></fieldset>
+      <fieldset class="full"><legend>যে জেলাগুলোতে সেবা দেবেন</legend>
+        <div class="district-picker" id="servePicker"></div></fieldset>
+      <label class="f full">Solset ওয়ার্কস্পেস লিংক (ঐচ্ছিক)<input type="url" name="solset" placeholder="https://solset.ai/…"></label>
+      <div class="full"><button class="btn primary" type="submit">নিবন্ধন করুন</button> <span class="status-line" id="provMsg"></span></div>
+    </form>
+    <aside class="panel calc">
+      <h3>যোগ্যতা যাচাই</h3>
+      <dl>
+        <dt>প্রয়োজনীয় কাগজপত্র</dt><dd id="pDocs">০/৪</dd>
+        <dt>নিজ জেলায় আবেদনের সুবিধা</dt><dd id="pHome">—</dd>
+        <dt>নতুন উদ্যোক্তা সুবিধা</dt><dd id="pNew">—</dd>
+      </dl>
+      <p class="note" id="pAdvice"></p>
+      <p class="note">নম্বর ব্যবস্থা পোস্টারের তথ্য অনুযায়ী দেখানো হয়েছে; চূড়ান্ত মূল্যায়ন বিতরণ সংস্থার যাচাই কমিটি করবে।</p>
+    </aside>
+  </div>
+</section>
+
+<!-- BOARD -->
+<section id="tab-board" hidden>
+  <h2>মিলান বোর্ড</h2>
+  <p class="lede">প্রতিটি অনুরোধের পাশে সেই জেলায় কাজ করা প্রোভাইডাররা অগ্রাধিকার ক্রমে দেখানো হয়। প্রোভাইডার আগ্রহ জানালে ধাপগুলো Solset-এর লিড পাইপলাইনের সঙ্গে মিলিয়ে হালনাগাদ করা যায়।</p>
+  <div class="toolbar">
+    <select id="fDist" aria-label="জেলা ফিল্টার"></select>
+    <select id="fStage" aria-label="ধাপ ফিল্টার"></select>
+    <select id="asProv" aria-label="আমি কোন প্রোভাইডার"><option value="">প্রোভাইডার হিসেবে দেখুন…</option></select>
+  </div>
+  <div id="reqList"></div>
+</section>
+
+<!-- SOLSET -->
+<section id="tab-solset" hidden>
+  <h2>Solset AI-এর সঙ্গে সংযোগ</h2>
+  <p class="lede">Solset লিড নেয় বিজ্ঞাপন ফর্ম, WhatsApp, CSV ইমপোর্ট বা হাতে লিখে। এখানকার অনুরোধগুলো CSV হিসেবে বের করে প্রোভাইডার নিজের Solset ওয়ার্কস্পেসে ইমপোর্ট করবেন, এরপর ডিজাইন, কোটেশন, স্থাপন ও সার্ভিস সেখানেই চলবে।</p>
+  <div class="split">
+    <div class="panel">
+      <h3>কাজের ধারা</h3>
+      <ol class="steps-int">
+        <li>ছাদ মালিক QR-B স্ক্যান করে সেটআপ অনুরোধ জমা দেন।</li>
+        <li>প্রোভাইডার QR-A থেকে নিবন্ধন করে মিলান বোর্ডে নিজের জেলার অনুরোধে আগ্রহ জানান।</li>
+        <li>নিচের বোতামে আগ্রহ দেখানো লিডগুলো Solset-উপযোগী CSV হিসেবে নামান এবং Solset-এ ইমপোর্ট করুন।</li>
+        <li>Solset Design Studio-তে স্যাটেলাইট থেকে ছাদ এঁকে ডিজাইন ও BOM, তারপর কোটেশন লিংক গ্রাহককে পাঠান।</li>
+        <li>স্থাপন ও গ্রিড সংযোগ শেষে মিলান বোর্ডে ধাপ হালনাগাদ করুন, যাতে জেলা পর্যায়ের অগ্রগতি দেখা যায়।</li>
+      </ol>
+    </div>
+    <div class="panel">
+      <h3>লিড এক্সপোর্ট</h3>
+      <label class="f">কোন প্রোভাইডারের লিড<select id="exProv"><option value="">সব অনুরোধ</option></select></label>
+      <p style="margin:12px 0;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn primary" id="exCsv">Solset CSV নামান</button>
+        <button class="btn ghost" id="exCopy">CSV কপি করুন</button>
+      </p>
+      <p class="note">কলাম: Name, Phone, Address, City, State, Source, Requirement, Capacity (kWp), Notes — Solset-এর CSV ইমপোর্টে কলাম মিলিয়ে নিন।</p>
+      <h3 style="margin-top:18px">Solset টুল</h3>
+      <p style="display:flex;gap:8px;flex-wrap:wrap">
+        <a class="btn ghost sm" href="https://solset.ai/signup?next=first-design" target="_blank" rel="noopener">প্রথম ডিজাইন বিনামূল্যে</a>
+        <a class="btn ghost sm" href="https://solset.ai/scan-bill" target="_blank" rel="noopener">বিদ্যুৎ বিল স্ক্যানার</a>
+        <a class="btn ghost sm" href="https://solset.ai/build-your-quote" target="_blank" rel="noopener">নিজে কোটেশন তৈরি</a>
+        <a class="btn ghost sm" href="https://solset.ai/know-your-quote" target="_blank" rel="noopener">কোটেশন যাচাই</a>
+        <a class="btn ghost sm" href="https://solset.ai/marketplace" target="_blank" rel="noopener">মার্কেটপ্লেসে তালিকাভুক্ত হোন</a>
+      </p>
+    </div>
+  </div>
+  <h3 style="margin-top:24px">প্রিভিউ</h3>
+  <div class="wrap-x panel"><table id="exTable"></table></div>
+</section>
+</main>
+<footer>প্রস্তুতকারী: প্রকৌশলী আবু কাওসার, প্রোগ্রামার, তথ্য ও যোগাযোগ প্রযুক্তি অধিদপ্তর · আনুমানিক হিসাব শুধু প্রাথমিক ধারণার জন্য।</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+const DISTRICTS=[["ঢাকা","Dhaka","Dhaka"],["গাজীপুর","Gazipur","Dhaka"],["নারায়ণগঞ্জ","Narayanganj","Dhaka"],["নরসিংদী","Narsingdi","Dhaka"],["মানিকগঞ্জ","Manikganj","Dhaka"],["মুন্সীগঞ্জ","Munshiganj","Dhaka"],["টাঙ্গাইল","Tangail","Dhaka"],["কিশোরগঞ্জ","Kishoreganj","Dhaka"],["ফরিদপুর","Faridpur","Dhaka"],["গোপালগঞ্জ","Gopalganj","Dhaka"],["মাদারীপুর","Madaripur","Dhaka"],["রাজবাড়ী","Rajbari","Dhaka"],["শরীয়তপুর","Shariatpur","Dhaka"],
+["চট্টগ্রাম","Chattogram","Chattogram"],["কক্সবাজার","Cox's Bazar","Chattogram"],["কুমিল্লা","Cumilla","Chattogram"],["ফেনী","Feni","Chattogram"],["নোয়াখালী","Noakhali","Chattogram"],["লক্ষ্মীপুর","Lakshmipur","Chattogram"],["চাঁদপুর","Chandpur","Chattogram"],["ব্রাহ্মণবাড়িয়া","Brahmanbaria","Chattogram"],["রাঙ্গামাটি","Rangamati","Chattogram"],["খাগড়াছড়ি","Khagrachhari","Chattogram"],["বান্দরবান","Bandarban","Chattogram"],
+["রাজশাহী","Rajshahi","Rajshahi"],["বগুড়া","Bogura","Rajshahi"],["পাবনা","Pabna","Rajshahi"],["সিরাজগঞ্জ","Sirajganj","Rajshahi"],["নাটোর","Natore","Rajshahi"],["নওগাঁ","Naogaon","Rajshahi"],["চাঁপাইনবাবগঞ্জ","Chapainawabganj","Rajshahi"],["জয়পুরহাট","Joypurhat","Rajshahi"],
+["খুলনা","Khulna","Khulna"],["যশোর","Jashore","Khulna"],["সাতক্ষীরা","Satkhira","Khulna"],["বাগেরহাট","Bagerhat","Khulna"],["কুষ্টিয়া","Kushtia","Khulna"],["ঝিনাইদহ","Jhenaidah","Khulna"],["মাগুরা","Magura","Khulna"],["নড়াইল","Narail","Khulna"],["চুয়াডাঙ্গা","Chuadanga","Khulna"],["মেহেরপুর","Meherpur","Khulna"],
+["বরিশাল","Barishal","Barishal"],["পটুয়াখালী","Patuakhali","Barishal"],["ভোলা","Bhola","Barishal"],["পিরোজপুর","Pirojpur","Barishal"],["ঝালকাঠি","Jhalokati","Barishal"],["বরগুনা","Barguna","Barishal"],
+["সিলেট","Sylhet","Sylhet"],["মৌলভীবাজার","Moulvibazar","Sylhet"],["হবিগঞ্জ","Habiganj","Sylhet"],["সুনামগঞ্জ","Sunamganj","Sylhet"],
+["রংপুর","Rangpur","Rangpur"],["দিনাজপুর","Dinajpur","Rangpur"],["কুড়িগ্রাম","Kurigram","Rangpur"],["গাইবান্ধা","Gaibandha","Rangpur"],["লালমনিরহাট","Lalmonirhat","Rangpur"],["নীলফামারী","Nilphamari","Rangpur"],["পঞ্চগড়","Panchagarh","Rangpur"],["ঠাকুরগাঁও","Thakurgaon","Rangpur"],
+["ময়মনসিংহ","Mymensingh","Mymensingh"],["জামালপুর","Jamalpur","Mymensingh"],["নেত্রকোনা","Netrokona","Mymensingh"],["শেরপুর","Sherpur","Mymensingh"]];
+const EN=Object.fromEntries(DISTRICTS.map(d=>[d[0],d]));
+const STAGES=["নতুন অনুরোধ","সাইট সার্ভে","ডিজাইন","কোটেশন","স্থাপন","গ্রিড সংযোগ"];
+const SOLSET_STAGE=["Enquiry","Enquiry","Design","Quotation","Build","Paid"];
+const TARIFF=10.5, YIELD=4.2, SQFT_PER_KW=100;
+
+const bn=n=>String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[d]);
+const fmt=(n,d=0)=>bn(Number(n).toLocaleString("en-IN",{maximumFractionDigits:d,minimumFractionDigits:d}));
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+function toast(m){const t=$("#toast");t.textContent=m;t.style.display="block";clearTimeout(toast._t);toast._t=setTimeout(()=>t.style.display="none",2800)}
+
+/* tabs */
+function show(tab){$$("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));$$("main>section").forEach(s=>s.hidden=s.id!=="tab-"+tab);window.scrollTo(0,0)}
+$$("nav.tabs button").forEach(b=>b.onclick=()=>show(b.dataset.tab));
+$$("[data-go]").forEach(b=>b.onclick=()=>show(b.dataset.go));
+
+/* district selects */
+const opts='<option value="">জেলা বেছে নিন</option>'+DISTRICTS.map(d=>`<option value="${d[0]}">${d[0]}</option>`).join("");
+$$(".districtSel").forEach(s=>s.innerHTML=opts);
+$("#servePicker").innerHTML=DISTRICTS.map(d=>`<label><input type="checkbox" name="serve" value="${d[0]}"> ${d[0]}</label>`).join("");
+$("#fDist").innerHTML='<option value="">সব জেলা</option>'+DISTRICTS.map(d=>`<option>${d[0]}</option>`).join("");
+$("#fStage").innerHTML='<option value="">সব ধাপ</option>'+STAGES.map((s,i)=>`<option value="${i}">${s}</option>`).join("");
+
+/* ---------- storage: db capability with local fallback ---------- */
+const state={requests:[],providers:[]};
+let db=null, mode="local";
+const LS="rts-bd-v1";
+function loadLocal(){try{const j=JSON.parse(localStorage.getItem(LS)||"{}");state.requests=j.requests||[];state.providers=j.providers||[]}catch(e){}}
+function saveLocal(){try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}}
+async function addDoc(col,data){
+  if(db){await db.collection(col).doc(data.id).set(data);return}
+  state[col].push(data);saveLocal();renderAll();
+}
+async function patchDoc(col,id,patch){
+  if(db){await db.collection(col).doc(id).update(patch);return}
+  const r=state[col].find(x=>x.id===id); if(r)Object.assign(r,patch); saveLocal();renderAll();
+}
+function setStatus(){ $("#storeStatus").textContent = mode==="db" ? "শেয়ার্ড ডেটা স্টোরে সংযুক্ত — সব ব্যবহারকারী একই অনুরোধ ও প্রোভাইডার তালিকা দেখছেন।" : "স্থানীয় মোড — ডেটা শুধু এই ব্রাউজারে থাকছে।"; }
+loadLocal(); setStatus(); renderAll();
+(async()=>{
+  try{
+    if(!window.claude||!claude.use)return;
+    const d=await claude.use("db"); if(!d)return;
+    db=d; mode="db"; setStatus();
+    db.collection("requests").onSnapshot(s=>{state.requests=s.docs.map(x=>x.data());renderAll()},e=>toast("ডেটা লোডে সমস্যা: "+e.code));
+    db.collection("providers").onSnapshot(s=>{state.providers=s.docs.map(x=>x.data());renderAll()},()=>{});
+  }catch(e){}
+})();
+
+function nextRef(kind,list){
+  const y=new Date().getFullYear(); const n=list.length+1+Math.floor(Math.random()*0); 
+  return `MoPTIT/ICT/${kind}/${y}/${String(n).padStart(4,"0")}-${Math.random().toString(36).slice(2,5).toUpperCase()}`;
+}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+
+/* ---------- owner calculator ---------- */
+const of=$("#ownerForm");
+function calc(){
+  const roof=+of.roof.value||0, units=+of.units.value||0, load=+of.load.value||0;
+  let kw=Math.floor(roof/SQFT_PER_KW*2)/2;
+  const gen=kw*YIELD*365, use=units*12, exp=Math.max(0,gen-use);
+  $("#cKw").textContent=fmt(kw,1)+" kWp";
+  $("#cGen").textContent=fmt(gen)+" ইউনিট";
+  $("#cUse").textContent=fmt(use)+" ইউনিট";
+  $("#cExp").textContent=fmt(exp)+" ইউনিট";
+  $("#cPay").textContent="৳ "+fmt(exp*TARIFF/4);
+  $("#cWarn").textContent = load && kw>load ? `সতর্কতা: সম্ভাব্য সিস্টেম (${fmt(kw,1)} kWp) অনুমোদিত লোডের (${fmt(load,1)} kW) চেয়ে বেশি — সংযোগ সীমা বিতরণ সংস্থার কাছে যাচাই করুন।` : (exp===0&&kw>0?"উৎপাদনের সবটাই নিজের ব্যবহারে যাবে; বিলের সাশ্রয়ই মূল লাভ।":"");
+  $("#cWarn").style.color = load&&kw>load ? "var(--red)" : "";
+  return {kw,gen,exp};
+}
+of.addEventListener("input",calc); calc();
+$("#geoBtn").onclick=()=>{
+  if(!navigator.geolocation){toast("এই ব্রাউজারে অবস্থান পাওয়া যায় না");return}
+  navigator.geolocation.getCurrentPosition(p=>{of.geo.value=p.coords.latitude.toFixed(5)+", "+p.coords.longitude.toFixed(5)},()=>toast("অবস্থান পাওয়া যায়নি — হাতে লিখে দিন বা খালি রাখুন"),{timeout:8000});
+  of.geo.readOnly=false;
+};
+of.addEventListener("submit",async e=>{
+  e.preventDefault();
+  if(!of.checkValidity()){of.reportValidity();return}
+  const c=calc();
+  const data={id:uid(),ref:nextRef("RTS-SR",state.requests),name:of.name.value.trim(),phone:of.phone.value.trim(),district:of.district.value,upazila:of.upazila.value.trim(),address:of.address.value.trim(),utility:of.utility.value,building:of.building.value,roof:+of.roof.value,roofType:of.roofType.value,units:+of.units.value,load:+of.load.value,goals:$$('#ownerForm [name=goal]:checked').map(x=>x.value),when:of.when.value,source:of.source.value,geo:of.geo.value,notes:of.notes.value.trim(),kw:c.kw,stage:0,interests:[],created:new Date().toISOString()};
+  try{await addDoc("requests",data);$("#ownerMsg").textContent="জমা হয়েছে · রেফারেন্স "+data.ref;toast("অনুরোধ জমা হয়েছে");of.reset();calc()}
+  catch(err){$("#ownerMsg").textContent="জমা হয়নি ("+(err.code||"error")+")। আবার চেষ্টা করুন।"}
+});
+
+/* ---------- provider ---------- */
+const pf=$("#provForm");
+function pcheck(){
+  const docs=$$('#provForm [name=doc]:checked').map(x=>x.value).filter(v=>v!=="fee").length;
+  const home=pf.home.value, serve=$$('#provForm [name=serve]:checked').map(x=>x.value);
+  $("#pDocs").textContent=bn(docs)+"/৪";
+  $("#pDocs").style.color=docs<4?"var(--red)":"var(--ok)";
+  $("#pHome").textContent=home?(serve.length===0||serve.includes(home)?"+৪০ ("+home+")":"নিজ জেলা সেবা তালিকায় নেই"):"—";
+  $("#pNew").textContent=pf.kind.value==="new"?"+১০":"প্রযোজ্য নয়";
+  const missing=[["trade","ট্রেড লাইসেন্স"],["tin","TIN"],["solv","ব্যাংক সলভেন্সি"],["tax","ট্যাক্স সার্টিফিকেট"]].filter(([k])=>!$(`#provForm [name=doc][value=${k}]`).checked).map(x=>x[1]);
+  $("#pAdvice").textContent=missing.length?"সরকারি আবেদনের আগে সংগ্রহ করুন: "+missing.join(", ")+"।":"সব প্রয়োজনীয় কাগজ আছে — জেলার বিতরণ অফিসে আবেদন করুন (মেয়াদ ৩১ ডিসেম্বর ২০২৮)।";
+}
+pf.addEventListener("input",pcheck);pf.addEventListener("change",pcheck);pcheck();
+pf.home.addEventListener("change",()=>{const b=$(`#servePicker input[value="${pf.home.value}"]`);if(b)b.checked=true;pcheck()});
+pf.addEventListener("submit",async e=>{
+  e.preventDefault();
+  if(!pf.checkValidity()){pf.reportValidity();return}
+  const serve=$$('#provForm [name=serve]:checked').map(x=>x.value);
+  if(!serve.length){toast("অন্তত একটি সেবা-জেলা বেছে নিন");return}
+  const data={id:uid(),ref:nextRef("RTS-SP",state.providers),company:pf.company.value.trim(),contact:pf.contact.value.trim(),phone:pf.phone.value.trim(),email:pf.email.value.trim(),home:pf.home.value,kind:pf.kind.value,expKw:+pf.expKw.value||0,docs:$$('#provForm [name=doc]:checked').map(x=>x.value),types:$$('#provForm [name=types]:checked').map(x=>x.value),serve,solset:pf.solset.value.trim(),created:new Date().toISOString()};
+  try{await addDoc("providers",data);$("#provMsg").textContent="নিবন্ধিত · রেফারেন্স "+data.ref;toast("প্রোভাইডার নিবন্ধিত");pf.reset();pcheck()}
+  catch(err){$("#provMsg").textContent="নিবন্ধন হয়নি ("+(err.code||"error")+")।"}
+});
+
+/* ---------- matching ---------- */
+function score(p,r){
+  if(!(p.serve||[]).includes(r.district)&&p.home!==r.district)return -1;
+  let s=0;
+  if(p.home===r.district)s+=40;
+  if((p.serve||[]).includes(r.district))s+=15;
+  s+=(r.goals||[]).filter(g=>(p.types||[]).includes(g)).length*5;
+  s+=Math.min(15,Math.floor((p.expKw||0)/20));
+  s+=((p.docs||[]).filter(d=>d!=="fee").length)*2;
+  if(p.kind==="new")s+=10;
+  return s;
+}
+function matchesFor(r){return state.providers.map(p=>({p,s:score(p,r)})).filter(x=>x.s>=0).sort((a,b)=>b.s-a.s)}
+
+function renderBoard(){
+  const fd=$("#fDist").value, fs=$("#fStage").value, me=$("#asProv").value;
+  const meP=state.providers.find(p=>p.id===me);
+  let list=state.requests.slice().sort((a,b)=>(b.created||"").localeCompare(a.created||""));
+  if(fd)list=list.filter(r=>r.district===fd);
+  if(fs!=="")list=list.filter(r=>String(r.stage||0)===fs);
+  if(meP)list=list.filter(r=>score(meP,r)>=0);
+  const box=$("#reqList");
+  if(!list.length){box.innerHTML=`<div class="empty">${state.requests.length?"এই ফিল্টারে কোনো অনুরোধ নেই।":"এখনো কোনো সেটআপ অনুরোধ আসেনি। ছাদ মালিকের আবেদন ট্যাব থেকে প্রথমটি জমা দিন।"}</div>`;return}
+  box.innerHTML=list.map(r=>{
+    const m=matchesFor(r).slice(0,5);
+    const ints=r.interests||[];
+    const intNames=ints.map(id=>state.providers.find(p=>p.id===id)?.company).filter(Boolean);
+    const mine=meP&&ints.includes(meP.id);
+    return `<article class="req" data-id="${esc(r.id)}">
+      <header><h3>${esc(r.name)} · ${esc(r.district)}, ${esc(r.upazila)}</h3><span class="ref">${esc(r.ref)}</span></header>
+      <div class="meta">${esc(r.building)} · ${fmt(r.roof)} বর্গফুট ${esc(r.roofType)} · প্রস্তাবিত ${fmt(r.kw,1)} kWp · ${esc(r.utility)} · ${esc((r.goals||[]).join(", "))} · উৎস ${esc(r.source)}</div>
+      <div class="pipe" role="group" aria-label="ধাপ">${STAGES.map((s,i)=>`<button type="button" data-stage="${i}" class="${i<=(r.stage||0)?"done":""}">${s}</button>`).join("")}</div>
+      <div class="matches">মিলে যাওয়া প্রোভাইডার: ${m.length?m.map(x=>`<span class="chip ${ints.includes(x.p.id)?"int":""}">${esc(x.p.company)} · ${bn(x.s)}</span>`).join(""):"<em>এই জেলায় এখনো কোনো প্রোভাইডার নিবন্ধিত নেই</em>"}</div>
+      ${intNames.length?`<div class="matches">আগ্রহী: ${esc(intNames.join(", "))}</div>`:""}
+      <p style="margin:10px 0 0;display:flex;gap:8px;flex-wrap:wrap">
+        ${meP?`<button class="btn ${mine?"ghost":"gold"} sm" data-act="interest">${mine?"আগ্রহ প্রত্যাহার":"আগ্রহ জানান"}</button>`:""}
+        ${meP&&mine?`<a class="btn ghost sm" href="tel:${esc(r.phone)}">কল ${esc(r.phone)}</a>`:""}
+        <button class="btn ghost sm" data-act="copy">Solset লিড টেক্সট কপি</button>
+        <a class="btn ghost sm" href="https://solset.ai/signup?next=first-design" target="_blank" rel="noopener">Solset-এ ডিজাইন</a>
+      </p></article>`}).join("");
+}
+$("#reqList").addEventListener("click",async e=>{
+  const art=e.target.closest(".req"); if(!art)return; const r=state.requests.find(x=>x.id===art.dataset.id); if(!r)return;
+  const st=e.target.closest("[data-stage]");
+  try{
+    if(st){await patchDoc("requests",r.id,{stage:+st.dataset.stage});toast("ধাপ হালনাগাদ: "+STAGES[+st.dataset.stage])}
+    const act=e.target.closest("[data-act]")?.dataset.act;
+    if(act==="interest"){const me=$("#asProv").value;const ints=new Set(r.interests||[]);ints.has(me)?ints.delete(me):ints.add(me);await patchDoc("requests",r.id,{interests:[...ints]});toast(ints.has(me)?"আগ্রহ জানানো হয়েছে":"আগ্রহ প্রত্যাহার করা হয়েছে")}
+    if(act==="copy"){await copy(leadText(r));toast("লিড টেক্সট কপি হয়েছে")}
+  }catch(err){toast("হালনাগাদ হয়নি ("+(err.code||"error")+")")}
+});
+["#fDist","#fStage","#asProv"].forEach(s=>$(s).addEventListener("change",renderBoard));
+
+function leadText(r){return `${r.name} — রুফটপ সোলার ${r.kw} kWp\nফোন: ${r.phone}\nঠিকানা: ${r.address}, ${r.upazila}, ${r.district}\nবিতরণ: ${r.utility} · অনুমোদিত লোড ${r.load} kW · মাসিক ${r.units} ইউনিট\nছাদ: ${r.roof} বর্গফুট ${r.roofType}\nচাহিদা: ${(r.goals||[]).join(", ")} · সময়: ${r.when}${r.geo?"\nঅবস্থান: "+r.geo:""}\nরেফ: ${r.ref}`}
+async function copy(t){try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove()}}
+
+/* ---------- Solset export ---------- */
+const COLS=["Name","Phone","Address","City","State","Country","Source","Requirement","Capacity (kWp)","Stage","Notes","Reference"];
+function exportRows(){
+  const pid=$("#exProv").value;
+  return state.requests.filter(r=>!pid||(r.interests||[]).includes(pid)).map(r=>{
+    const d=EN[r.district]||[r.district,r.district,""];
+    return [r.name,r.phone,`${r.address}, ${r.upazila}`,d[1],d[2]+" Division","Bangladesh",`BD Rooftop Solar ${r.source}`,`Rooftop solar · ${r.building} · ${(r.goals||[]).join("/")}`,r.kw,SOLSET_STAGE[r.stage||0],`Roof ${r.roof} sqft ${r.roofType}; ${r.units} kWh/mo; load ${r.load} kW; ${r.utility}; ${r.when}${r.geo?"; GPS "+r.geo:""}${r.notes?"; "+r.notes:""}`,r.ref];
+  });
+}
+const csvCell=v=>{const s=String(v??"");return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s};
+const toCsv=()=>"\uFEFF"+[COLS,...exportRows()].map(r=>r.map(csvCell).join(",")).join("\r\n");
+function renderExport(){
+  const rows=exportRows();
+  $("#exTable").innerHTML=`<thead><tr>${COLS.map(c=>`<th>${c}</th>`).join("")}</tr></thead><tbody>${rows.length?rows.slice(0,20).map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join(""):`<tr><td colspan="${COLS.length}">এক্সপোর্ট করার মতো কোনো লিড নেই।</td></tr>`}</tbody>`;
+}
+$("#exProv").addEventListener("change",renderExport);
+$("#exCopy").onclick=async()=>{await copy(toCsv());toast("CSV কপি হয়েছে")};
+$("#exCsv").onclick=async()=>{
+  const data=toCsv();
+  try{
+    const dl=window.claude&&claude.use?await claude.use("downloads"):null;
+    if(!dl){await copy(data);toast("ডাউনলোড এখানে চালু নেই — CSV কপি করা হয়েছে");return}
+    await dl.save({filename:`solset-leads-${new Date().toISOString().slice(0,10)}.csv`,data:new Blob([data],{type:"text/csv"})});
+    toast("CSV নামানো হয়েছে");
+  }catch(e){if(e&&e.code==="declined")return;await copy(data);toast("ডাউনলোড হয়নি — CSV কপি করা হয়েছে")}
+};
+
+/* ---------- render all ---------- */
+function renderAll(){
+  $("#stReq").textContent=bn(state.requests.length);
+  $("#stProv").textContent=bn(state.providers.length);
+  $("#stKw").textContent=fmt(state.requests.reduce((a,r)=>a+(+r.kw||0),0),1);
+  $("#stDist").textContent=bn(new Set(state.requests.map(r=>r.district)).size);
+  const provOpts=state.providers.slice().sort((a,b)=>a.company.localeCompare(b.company)).map(p=>`<option value="${esc(p.id)}">${esc(p.company)} (${esc(p.home)})</option>`).join("");
+  const a=$("#asProv").value, x=$("#exProv").value;
+  $("#asProv").innerHTML='<option value="">প্রোভাইডার হিসেবে দেখুন…</option>'+provOpts; $("#asProv").value=a;
+  $("#exProv").innerHTML='<option value="">সব অনুরোধ</option>'+provOpts.replace(/<option/g,"<option").replace(/\)<\/option>/g,") — আগ্রহ দেখানো লিড</option>"); $("#exProv").value=x;
+  renderBoard(); renderExport();
+}
+})();
+</script>
+</body>
+</html>
